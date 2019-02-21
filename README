@@ -8,3 +8,6 @@ density, CMB temperature, observational depth, etc.) and to do so in such
 a way as to make the analysis of that data as algorithmically efficient as
 possible.
 
+
+## to build with python support
+follow instructions in morriscb/astro-stomp, but replace any python with python3 in the commandline
