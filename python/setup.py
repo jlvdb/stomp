@@ -22,7 +22,7 @@ else:
 try:
     import numpy
     include_dirs=[numpy.get_include()]
-    addflags='-DWITH_NUMPY'
+    addflags='-DWITH_NUMPY3'
     os.environ['CPPFLAGS'] +=  ' ' +addflags
     depends=['NumpyVector.h']
 except:
