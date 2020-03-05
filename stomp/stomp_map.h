@@ -319,7 +319,8 @@ class Map : public BaseMap {
   // lower-weighted one.
   void GenerateRandomPoints(AngularVector& ang,
                             uint32_t n_point = 1,
-                            bool use_weighted_sampling = false);
+                            bool use_weighted_sampling = false,
+                            uint32_t seed = 0);
 
   // Instead of a fixed number of random positions, we may have either a
   // vector of WeightedAngularCoordinate objects where we want to randomize
@@ -328,11 +329,11 @@ class Map : public BaseMap {
   // is taken from the size of the input vector (or the number of input points
   // within the current Map).
   void GenerateRandomPoints(WAngularVector& ang, WAngularVector& input_ang,
-			    bool use_weighted_sampling = false);
+			    bool use_weighted_sampling = false, uint32_t seed = 0);
   void GenerateRandomPoints(WAngularVector& ang, std::vector<double>& weights,
-			    bool use_weighted_sampling = false);
+			    bool use_weighted_sampling = false, uint32_t seed = 0);
   void GenerateRandomPoints(CosmoVector& ang, CosmoVector& input_ang,
-			    bool use_weighted_sampling = false);
+			    bool use_weighted_sampling = false, uint32_t seed = 0);
 
   //Like the above methods but only returns a single random angular point on
   //the map. Boolien is used to return the weight of the map at the random
@@ -347,20 +348,20 @@ class Map : public BaseMap {
   // This is the generic function
   PyObject* GenerateRandomPoints(uint32_t n_point,
 				 Stomp::AngularCoordinate::Sphere systemid,
-				 bool use_weighted_sampling=false)
+				 bool use_weighted_sampling=false, uint32_t seed=0)
     throw (const char*);
   // overloaded for string system name
   PyObject* GenerateRandomPoints(uint32_t n_point, const std::string& system,
-				 bool use_weighted_sampling=false)
+				 bool use_weighted_sampling=false, uint32_t seed=0)
     throw (const char*);
   PyObject* GenerateRandomEq(uint32_t n_point,
-			     bool use_weighted_sampling = false)
+			     bool use_weighted_sampling = false, uint32_t seed = 0)
     throw (const char*);
   PyObject* GenerateRandomSurvey(uint32_t n_point,
-				 bool use_weighted_sampling = false)
+				 bool use_weighted_sampling = false, uint32_t seed = 0)
     throw (const char*);
   PyObject* GenerateRandomGal(uint32_t n_point,
-			      bool use_weighted_sampling = false)
+			      bool use_weighted_sampling = false, uint32_t seed = 0)
     throw (const char*);
 
 

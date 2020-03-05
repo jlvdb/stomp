@@ -1580,7 +1580,7 @@ bool Map::RegionExcludedMap(int16_t region_index, Map& stomp_map) {
 }
 
 void Map::GenerateRandomPoints(AngularVector& ang, uint32_t n_point,
-			       bool use_weighted_sampling) {
+			       bool use_weighted_sampling, uint32_t seed) {
   if (!ang.empty()) ang.clear();
   ang.reserve(n_point);
 
@@ -1600,7 +1600,8 @@ void Map::GenerateRandomPoints(AngularVector& ang, uint32_t n_point,
   Coverage(superpix);
 
   MTRand mtrand;
-  mtrand.seed();
+  if (seed > 0) mtrand.seed(seed);
+  else mtrand.seed();
 
   for (uint32_t m=0;m<n_point;m++) {
     bool keep = false;
@@ -1635,7 +1636,7 @@ void Map::GenerateRandomPoints(AngularVector& ang, uint32_t n_point,
 }
 
 void Map::GenerateRandomPoints(WAngularVector& ang, WAngularVector& input_ang,
-			       bool use_weighted_sampling) {
+			       bool use_weighted_sampling, uint32_t seed) {
   if (!ang.empty()) ang.clear();
   ang.reserve(input_ang.size());
 
@@ -1655,7 +1656,8 @@ void Map::GenerateRandomPoints(WAngularVector& ang, WAngularVector& input_ang,
   Coverage(superpix);
 
   MTRand mtrand;
-  mtrand.seed();
+  if (seed > 0) mtrand.seed(seed);
+  else mtrand.seed();
 
   WeightedAngularCoordinate tmp_ang;
   for (uint32_t m=0;m<input_ang.size();m++) {
@@ -1693,7 +1695,7 @@ void Map::GenerateRandomPoints(WAngularVector& ang, WAngularVector& input_ang,
 
 void Map::GenerateRandomPoints(WAngularVector& ang,
 			       std::vector<double>& weights,
-			       bool use_weighted_sampling) {
+			       bool use_weighted_sampling, uint32_t seed) {
   if (!ang.empty()) ang.clear();
   ang.reserve(weights.size());
 
@@ -1713,7 +1715,8 @@ void Map::GenerateRandomPoints(WAngularVector& ang,
   Coverage(superpix);
 
   MTRand mtrand;
-  mtrand.seed();
+  if (seed > 0) mtrand.seed(seed);
+  else mtrand.seed();
 
   WeightedAngularCoordinate tmp_ang;
   for (uint32_t m=0;m<weights.size();m++) {
@@ -1748,7 +1751,7 @@ void Map::GenerateRandomPoints(WAngularVector& ang,
 }
 
 void Map::GenerateRandomPoints(CosmoVector& ang, CosmoVector& input_ang,
-			       bool use_weighted_sampling) {
+			       bool use_weighted_sampling, uint32_t seed) {
   if (!ang.empty()) ang.clear();
   ang.reserve(input_ang.size());
 
@@ -1768,7 +1771,8 @@ void Map::GenerateRandomPoints(CosmoVector& ang, CosmoVector& input_ang,
   Coverage(superpix);
 
   MTRand mtrand;
-  mtrand.seed();
+  if (seed > 0) mtrand.seed(seed);
+  else mtrand.seed();
 
   CosmoCoordinate tmp_ang;
   for (uint32_t m=0;m<input_ang.size();m++) {
@@ -1863,17 +1867,17 @@ void Map::GenerateSingleRandomPoint(WeightedAngularCoordinate& ang,
 
 // This is the generic version taking a string for the system
 PyObject* Map::GenerateRandomPoints(uint32_t n_point, const std::string& system,
-				    bool use_weighted_sampling)
+				    bool use_weighted_sampling, uint32_t seed)
   throw (const char*)  {
   Stomp::AngularCoordinate::Sphere sys =
     Stomp::AngularCoordinate::SystemFromString(system);
-  return GenerateRandomPoints(n_point,sys,use_weighted_sampling);
+  return GenerateRandomPoints(n_point,sys,use_weighted_sampling,seed);
 }
 
 // This is the generic version taking a Sphere id for the system
 PyObject* Map::GenerateRandomPoints(uint32_t n_point,
 				    Stomp::AngularCoordinate::Sphere systemid,
-				    bool use_weighted_sampling)
+				    bool use_weighted_sampling, uint32_t seed)
   throw (const char*)  {
   double minimum_probability = -0.0001;
   double probability_slope = 0.0;
@@ -1896,7 +1900,8 @@ PyObject* Map::GenerateRandomPoints(uint32_t n_point,
   Coverage(superpix);
 
   MTRand mtrand;
-  mtrand.seed();
+  if (seed > 0) mtrand.seed(seed);
+  else mtrand.seed();
 
   for (uint32_t m=0;m<n_point;m++) {
     bool keep = false;
@@ -1953,21 +1958,23 @@ PyObject* Map::GenerateRandomPoints(uint32_t n_point,
 }
 
 // These are wrappers for the more generic function above
-PyObject* Map::GenerateRandomEq(uint32_t n_point, bool use_weighted_sampling)
+PyObject* Map::GenerateRandomEq(uint32_t n_point, bool use_weighted_sampling,
+            uint32_t seed)
   throw (const char*)  {
   return GenerateRandomPoints(n_point, Stomp::AngularCoordinate::Equatorial,
-			      use_weighted_sampling);
+			      use_weighted_sampling, seed);
 }
 PyObject* Map::GenerateRandomSurvey(uint32_t n_point,
-				    bool use_weighted_sampling)
+				    bool use_weighted_sampling, uint32_t seed)
   throw (const char*)  {
   return GenerateRandomPoints(n_point, Stomp::AngularCoordinate::Survey,
-			      use_weighted_sampling);
+			      use_weighted_sampling, seed);
 }
-PyObject* Map::GenerateRandomGal(uint32_t n_point, bool use_weighted_sampling)
+PyObject* Map::GenerateRandomGal(uint32_t n_point, bool use_weighted_sampling,
+            uint32_t seed)
   throw (const char*)  {
   return GenerateRandomPoints(n_point, Stomp::AngularCoordinate::Galactic,
-			      use_weighted_sampling);
+			      use_weighted_sampling, seed);
 }
 
 // generate random points in a quadrant around the input lambda,eta
