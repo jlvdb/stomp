@@ -11,3 +11,16 @@ possible.
 
 ## to build with python support
 follow instructions in morriscb/astro-stomp, but replace any python with python3 in the commandline
+
+
+# INSTALL
+
+    ./autogen.sh
+    ./configure --prefix=[directory]
+    make clean
+    make
+    make install
+    cd python
+    python3 runswig.py
+    python setup.py build
+    python steup.py install --prefix=[directory]
