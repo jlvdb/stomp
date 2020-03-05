@@ -22,5 +22,5 @@ follow instructions in morriscb/astro-stomp, but replace any python with python3
     make install
     cd python
     python3 runswig.py
-    python setup.py build
-    python steup.py install --prefix=[directory]
+    python3 setup.py build
+    python3 setup.py install --prefix=[directory]
