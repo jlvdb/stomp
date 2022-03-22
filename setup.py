@@ -82,6 +82,7 @@ setup(
     description="""STOMP is a set of libraries for doing astrostatistical analysis on the celestial sphere.""",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    url="https://github.com/jlvdb/astro-stomp3",
     data_files=[('ups', ['ups/stomp.table'])],
     ext_modules=[stomp_module],
     py_modules=["stomp"],
