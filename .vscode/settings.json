@@ -7,10 +7,5 @@
         "test_*.py"
     ],
     "python.testing.pytestEnabled": false,
-    "python.testing.unittestEnabled": true,
-    "jupyter.jupyterServerType": "local",
-    "files.associations": {
-        "*.param": "shellscript",
-        "stomp_core.h": "c"
-    }
+    "python.testing.unittestEnabled": true
 }
