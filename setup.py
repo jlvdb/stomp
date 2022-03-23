@@ -4,10 +4,10 @@ import os
 import subprocess
 
 from distutils.core import setup, Extension
-from distutils.command.build_ext import build_ext as _build_ext
+from distutils.command.build_py import build_py as _build_py
 import distutils.spawn
 
-class build_ext(_build_ext):
+class build_py(_build_py):
 
     def run(self):
         swig_path = distutils.spawn.find_executable("swig")
@@ -17,6 +17,7 @@ class build_ext(_build_ext):
             swig_path, o=wrap_file, opts=" ".join(swig_opts), i=swig_file)
         with subprocess.Popen(swig_call, shell=True) as pobj:
             pobj.communicate()
+        self.run_command("build_ext")
         return super().run()
 
 
@@ -78,7 +79,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jlvdb/astro-stomp3",
-    cmdclass={'build_ext': build_ext},
+    cmdclass={'build_py': build_py},
     ext_modules=[stomp_module],
     packages=["stomp"],
     include_dirs=include_dirs)
