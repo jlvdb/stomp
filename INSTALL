@@ -1,6 +1,0 @@
-First run the autogen.sh script
-
-./autogen.sh
-./configure [options]
-make
-make install

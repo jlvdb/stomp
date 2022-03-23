@@ -5,13 +5,16 @@ import subprocess
 
 from distutils.core import setup, Extension
 
-with open("README.md", "r") as f:
+
+root = os.path.dirname(__file__)
+
+with open(os.path.join(root, "README.md"), "r") as f:
     long_description = f.read()
 
-os.chdir("python")  # where the swig code is located
+os.chdir("stomp")  # where the swig code is located
 
 # prepare compiler inputs and flags
-include_dirs = ["../"]
+include_dirs = ["../src"]
 depends = []
 extra_compile_args = ["-std=c++11"]
 swig_opts = ["-c++", "-py3"]
@@ -36,6 +39,7 @@ pyvers = "{:}.{:}".format(*sys.version_info[0:2])
 dir_lib = "lib/python%s/site-packages" % pyvers
 dir_lib64 = "lib64/python%s/site-packages" % pyvers
 
+'''
 if not os.path.exists("ups"):
     os.mkdir("ups")
 with open('ups/stomp.table','w') as tablefile:
@@ -49,28 +53,29 @@ envPrepend(CPATH,${{PRODUCT_DIR}}/include)
 envPrepend(PYTHONPATH,${{PRODUCT_DIR}}/{:})
 envPrepend(PYTHONPATH,${{PRODUCT_DIR}}/{:})
 """.format(dir_lib, dir_lib64))
+'''
 
 stomp_module = Extension(
     "_stomp",
     depends=depends,
     sources=[
-        "../stomp/stomp_core.cc",
-        "../stomp/stomp_angular_bin.cc",
-        "../stomp/stomp_radial_bin.cc",
-        "../stomp/stomp_angular_coordinate.cc",
-        "../stomp/stomp_angular_correlation.cc",
-        "../stomp/stomp_radial_correlation.cc",
-        "../stomp/stomp_pixel.cc",
-        "../stomp/stomp_scalar_pixel.cc",
-        "../stomp/stomp_tree_pixel.cc",
-        "../stomp/stomp_itree_pixel.cc",
-        "../stomp/stomp_base_map.cc",
-        "../stomp/stomp_map.cc",
-        "../stomp/stomp_scalar_map.cc",
-        "../stomp/stomp_tree_map.cc",
-        "../stomp/stomp_itree_map.cc",
-        "../stomp/stomp_geometry.cc",
-        "../stomp/stomp_util.cc",
+        "../src/stomp/stomp_core.cc",
+        "../src/stomp/stomp_angular_bin.cc",
+        "../src/stomp/stomp_radial_bin.cc",
+        "../src/stomp/stomp_angular_coordinate.cc",
+        "../src/stomp/stomp_angular_correlation.cc",
+        "../src/stomp/stomp_radial_correlation.cc",
+        "../src/stomp/stomp_pixel.cc",
+        "../src/stomp/stomp_scalar_pixel.cc",
+        "../src/stomp/stomp_tree_pixel.cc",
+        "../src/stomp/stomp_itree_pixel.cc",
+        "../src/stomp/stomp_base_map.cc",
+        "../src/stomp/stomp_map.cc",
+        "../src/stomp/stomp_scalar_map.cc",
+        "../src/stomp/stomp_tree_map.cc",
+        "../src/stomp/stomp_itree_map.cc",
+        "../src/stomp/stomp_geometry.cc",
+        "../src/stomp/stomp_util.cc",
         "stomp_wrap.cpp"],
     extra_compile_args=extra_compile_args,
     swig_opts=swig_opts)
@@ -83,7 +88,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jlvdb/astro-stomp3",
-    data_files=[('ups', ['ups/stomp.table'])],
+    #data_files=[('ups', ['ups/stomp.table'])],
     ext_modules=[stomp_module],
     py_modules=["stomp"],
     include_dirs=include_dirs)
