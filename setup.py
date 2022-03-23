@@ -4,34 +4,37 @@ import os
 import subprocess
 
 from distutils.core import setup, Extension
+from distutils.command.build_ext import build_ext as _build_ext
 
 
-def run_swig(swig_file, swig_opts, out_file):
-    swig_call = "swig -python {opts:} -o {o:} {i:}".format(
-        o=out_file, opts=" ".join(swig_opts), i=swig_file)
-    pobj = subprocess.Popen(swig_call, shell=True)
-    stdout_ret, stderr_ret = pobj.communicate()
+class build_ext(_build_ext):
+
+    def run(self):
+        swig_call = "swig -python {opts:} -o {o:} {i:}".format(
+            o=wrap_file, opts=" ".join(swig_opts), i=swig_file)
+        with subprocess.Popen(swig_call, shell=True) as pobj:
+            pobj.communicate()
+        return super().run()
 
 
-root = os.path.dirname(__file__)
-
-# prepare compiler inputs and flags
+# compiler inputs
 include_dirs = ["src"]
 depends = []
+swig_file = "stomp/stomp.i"
+wrap_file = "stomp/stomp_wrap.cpp"
+# compiler flags
 extra_compile_args = ["-std=c++11"]
 swig_opts = ["-c++", "-py3"]
-try:
+try:  # check if numpy extension will be used
     import numpy
+    # compiler inputs
     include_dirs.append(numpy.get_include())
     depends.append("NumpyVector.h")
+    # compiler flags
     extra_compile_args.append("-DWITH_NUMPY3")
     swig_opts.append("-DWITH_NUMPY3")
 except ImportError:
     sys.stdout.write("Numpy not found, not building with numpy support\n")
-
-# run swig; don't know how to do this the proper way with distutils but this
-# solution works
-run_swig("stomp/stomp.i", swig_opts, "stomp/stomp_wrap.cpp")
 
 # define the C++ extension module
 stomp_module = Extension(
@@ -55,12 +58,12 @@ stomp_module = Extension(
         "src/stomp/stomp_itree_map.cc",
         "src/stomp/stomp_geometry.cc",
         "src/stomp/stomp_util.cc",
-        "stomp/stomp_wrap.cpp"],
+        wrap_file],
     extra_compile_args=extra_compile_args,
     swig_opts=swig_opts)
 
 # read the long description
-with open(os.path.join(root, "README.md"), "r") as f:
+with open("README.md", "r") as f:
     long_description = f.read()
 
 # define the package metadata
@@ -72,6 +75,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jlvdb/astro-stomp3",
+    cmdclass={'build_ext': build_ext},
     ext_modules=[stomp_module],
     packages=["stomp"],
     include_dirs=include_dirs)
