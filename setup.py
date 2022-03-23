@@ -5,13 +5,16 @@ import subprocess
 
 from distutils.core import setup, Extension
 from distutils.command.build_ext import build_ext as _build_ext
-
+import distutils.spawn
 
 class build_ext(_build_ext):
 
     def run(self):
-        swig_call = "swig -python {opts:} -o {o:} {i:}".format(
-            o=wrap_file, opts=" ".join(swig_opts), i=swig_file)
+        swig_path = distutils.spawn.find_executable("swig")
+        if swig_path is None:
+            raise OSError("no SWIG installation found")
+        swig_call = "{:} -python {opts:} -o {o:} {i:}".format(
+            swig_path, o=wrap_file, opts=" ".join(swig_opts), i=swig_file)
         with subprocess.Popen(swig_call, shell=True) as pobj:
             pobj.communicate()
         return super().run()
